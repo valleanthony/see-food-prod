@@ -10,21 +10,22 @@ public class Shop {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column(name = "Business_Name")
+    @Column(name = "business_name")
     private String businessName;
-    @Column(name = "City")
+    @Column(name = "city")
     private String city;
-    @Column(name = "Zip_Code")
+    @Column(name = "zip_code")
     @Size(min = 5,max = 5)
     private Integer zipCode;
-    @Column(name = "Address")
+    @Column(name = "address")
     private String address;
-    @Column(name = "Rating" )
+    @Column(name = "rating" )
     private Rating rating;
     @OneToMany(cascade = CascadeType.ALL)
+    //@JoinTable(joinColumns = @JoinColumn(name = "shop_id"), inverseJoinColumns = @JoinColumn(name = "reviews_id"))
     private Collection<Reviews> reviews;
 
-    private Collection<User> employees;
-    private Collection<Items> productsSold;
+//    private Collection<User> employees;
+//    private Collection<Items> productsSold;
 
 }

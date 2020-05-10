@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@Entity
 public class Reviews {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,12 +21,15 @@ public class Reviews {
     private LocalDateTime timestamp;
 
     @Lob
-    @Column(name="CONTENT", length=1012)
+    @Column(name="Content", length=1012)
     private String content;
 
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     private Shop shop;
+
+
 
 }

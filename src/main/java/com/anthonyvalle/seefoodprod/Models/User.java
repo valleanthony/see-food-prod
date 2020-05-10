@@ -1,14 +1,13 @@
 package com.anthonyvalle.seefoodprod.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.format.annotation.NumberFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.Collection;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Table(name = "user")
@@ -17,6 +16,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @NumberFormat
+    @JsonIgnore
     private Long id;
 
     @Column(name = "email",unique = true)
@@ -39,9 +39,16 @@ public class User {
 
     private String phoneNumber;
 
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Collection<Role> roles;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    private Set<Order> orderList;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    private Set<Reviews> reviewsList;
 
     public Long getId() {
         return id;

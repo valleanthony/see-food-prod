@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
+import javax.persistence.EntityNotFoundException;
+import javax.validation.ValidationException;
 import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.List;
 
@@ -20,24 +22,26 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getUsers() {
+
         return userRepo.findAll();
     }
 
     @Override
-    public User getUser(Long id) throws UserPrincipalNotFoundException {
-       if (userRepo.findById(id).isPresent()){
-           try{
-                return  userRepo.getOne(id);
-           }catch (Exception e){
-               e.printStackTrace();
-           }
-       }else
-           throw new UserPrincipalNotFoundException("User not found");
-       return null;
+    public User getUser(Long id) {
+
+        if (!userRepo.findById(id).isPresent()){
+            throw new EntityNotFoundException("User not found");
+        } else {
+            return userRepo.getOne(id);
+
+        }
     }
 
     @Override
     public User createUser(User user) {
+        if (user == null){
+            throw new ValidationException();
+        }else
         return userRepo.saveAndFlush(user);
     }
 
@@ -52,6 +56,8 @@ public class UserServiceImpl implements UserService {
               e.printStackTrace();
 
            }
+       }else{
+           throw new EntityNotFoundException();
        }
        return user;
     }
@@ -59,7 +65,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(Long id) {
-         userRepo.deleteById(id);
+        if (userRepo.findById(id).isPresent()){
+            try {
+                userRepo.deleteById(id);
+            }catch (Exception e){
+                e.printStackTrace();
+
+            }
+        }else{
+            throw new EntityNotFoundException();
+        }
+
     }
 
 }
